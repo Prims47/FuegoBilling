@@ -1,0 +1,38 @@
+# github.com/davecgh/go-spew v1.1.1
+github.com/davecgh/go-spew/spew
+# github.com/golang/mock v1.4.4
+## explicit
+github.com/golang/mock/gomock
+# github.com/google/uuid v1.1.2
+## explicit
+github.com/google/uuid
+# github.com/inconshreveable/mousetrap v1.0.0
+github.com/inconshreveable/mousetrap
+# github.com/jung-kurt/gofpdf v1.16.2
+## explicit
+github.com/jung-kurt/gofpdf
+# github.com/pkg/errors v0.8.1
+## explicit
+github.com/pkg/errors
+# github.com/pmezard/go-difflib v1.0.0
+github.com/pmezard/go-difflib/difflib
+# github.com/spf13/cobra v1.0.0
+## explicit
+github.com/spf13/cobra
+# github.com/spf13/pflag v1.0.3
+github.com/spf13/pflag
+# github.com/stretchr/testify v1.2.2
+## explicit
+github.com/stretchr/testify/assert
+# golang.org/x/text v0.3.0
+## explicit
+golang.org/x/text/feature/plural
+golang.org/x/text/internal
+golang.org/x/text/internal/catmsg
+golang.org/x/text/internal/format
+golang.org/x/text/internal/number
+golang.org/x/text/internal/stringset
+golang.org/x/text/internal/tag
+golang.org/x/text/language
+golang.org/x/text/message
+golang.org/x/text/message/catalog

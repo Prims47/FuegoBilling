@@ -1,0 +1,17 @@
+{
+    "address": {
+        "city": "Paris",
+        "street": "770 rue de Fuego",
+        "country": "France",
+        "zipCode": "75006"
+    },
+    "company": {
+        "siret": "88462068300018",
+        "tva": "FR77049322770",
+        "capital": 100.00,
+        "rcs": "Nanterre B",
+        "naf": "6201Z",
+        "type": "SARL"
+    },
+    "name": "Fuego by P"
+}

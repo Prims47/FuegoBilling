@@ -1,0 +1,72 @@
+package repository
+
+import (
+	"errors"
+
+	"fuegobyp-billing.com/internal/adapter"
+	"fuegobyp-billing.com/internal/model"
+)
+
+type CustomerRepositoryInterface interface {
+	Request(id string) (model.Customer, error)
+}
+
+type CustomerRepository struct {
+	Adapter adapter.CustomerAdapterInterface
+}
+
+func NewCustomerRepository(adapter adapter.CustomerAdapterInterface) CustomerRepositoryInterface {
+	return &CustomerRepository{Adapter: adapter}
+}
+
+func (a *CustomerRepository) Request(id string) (model.Customer, error) {
+	if id == "" {
+		return model.Customer{}, errors.New("Please give a valid params")
+	}
+
+	customerAdapterResponse, err := a.Adapter.Request(id)
+
+	if err != nil {
+		return model.Customer{}, err
+	}
+
+	return parseCustomerAdapterResponse(customerAdapterResponse)
+}
+
+func parseCustomerAdapterResponse(response adapter.CustomerAdapterResponse) (model.Customer, error) {
+	if response.Name == "" ||
+		response.Address.Street == "" ||
+		response.Address.ZipCode == "" ||
+		response.Address.City == "" ||
+		response.Address.Country == "" ||
+		response.Company.Siret == "" ||
+		response.Company.Tva == "" ||
+		response.Company.Capital < 1 ||
+		response.Company.RCS == "" ||
+		response.Company.NAF == "" ||
+		response.Company.Type == "" {
+		return model.Customer{}, errors.New("Error when parse Customer. Data is not correct")
+	}
+
+	return mapCustomerAdapterResponseToModel(response), nil
+}
+
+func mapCustomerAdapterResponseToModel(response adapter.CustomerAdapterResponse) model.Customer {
+	return model.Customer{
+		Name: response.Name,
+		Address: model.Address{
+			Street:  response.Address.Street,
+			City:    response.Address.City,
+			Country: response.Address.Country,
+			ZipCode: response.Address.ZipCode,
+		},
+		Company: model.Company{
+			Siret:   response.Company.Siret,
+			Tva:     response.Company.Tva,
+			Capital: response.Company.Capital,
+			NAF:     response.Company.NAF,
+			RCS:     response.Company.RCS,
+			Type:    response.Company.Type,
+		},
+	}
+}
