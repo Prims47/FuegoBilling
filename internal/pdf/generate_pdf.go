@@ -14,13 +14,14 @@ type BillingPDFInterface interface {
 }
 
 type BillingPDF struct {
-	PdfName     string
-	PdfPath     string
-	Account     model.Account
-	Customer    model.Customer
-	Service     model.Service
-	FormatInt   services.FormatIntInterface
-	FormatFloat services.FormatFloatInterface
+	PdfName       string
+	PdfPath       string
+	Account       model.Account
+	Customer      model.Customer
+	Service       model.Service
+	FormatInt     services.FormatIntInterface
+	FormatFloat   services.FormatFloatInterface
+	BillingNumber string
 }
 
 func NewBillingPDF(pdfPath string,
@@ -29,19 +30,21 @@ func NewBillingPDF(pdfPath string,
 	customer model.Customer,
 	service model.Service,
 	formatInt services.FormatIntInterface,
-	formatFloat services.FormatFloatInterface) BillingPDFInterface {
+	formatFloat services.FormatFloatInterface,
+	billingNumber string) BillingPDFInterface {
 	return &BillingPDF{PdfName: pdfName,
-		PdfPath:     pdfPath,
-		Account:     account,
-		Customer:    customer,
-		Service:     service,
-		FormatInt:   formatInt,
-		FormatFloat: formatFloat}
+		PdfPath:       pdfPath,
+		Account:       account,
+		Customer:      customer,
+		Service:       service,
+		FormatInt:     formatInt,
+		FormatFloat:   formatFloat,
+		BillingNumber: billingNumber}
 }
 
 const dateFormat = "2 Jan, 2006"
 
-func handleHeader(pdf *gofpdf.Fpdf) {
+func handleHeader(pdf *gofpdf.Fpdf, b *BillingPDF) {
 	tr := pdf.UnicodeTranslatorFromDescriptor("")
 
 	pdf.SetHeaderFuncMode(func() {
@@ -54,9 +57,7 @@ func handleHeader(pdf *gofpdf.Fpdf) {
 		pdf.Ln(20)
 		pdf.SetTextColor(0, 0, 0)
 
-		billing := model.Billing{}
-
-		pdf.Cell(10, 10, tr("Référence de facture : "+billing.GetBillingNumber()))
+		pdf.Cell(10, 10, tr("Référence de facture : "+b.BillingNumber))
 		pdf.Ln(8)
 		pdf.Cell(10, 10, tr(fmt.Sprintf("Émise le %s", time.Now().Format(dateFormat)))) // @todo: inject date
 	}, true)
@@ -113,7 +114,7 @@ func (b *BillingPDF) CreatePdf() {
 
 	w, _ := pdf.GetPageSize()
 
-	handleHeader(pdf)
+	handleHeader(pdf, b)
 	handleFooter(pdf, b)
 
 	pdf.AliasNbPages("")
