@@ -37,8 +37,8 @@ func TestCustomerRequest(t *testing.T) {
 		errorMsg string
 		response CustomerAdapterResponse
 	}{
-		{name: "Given No ID", id: "", errorMsg: "Invalid account config path"},
-		{name: "Given not existed ID", id: "toto", errorMsg: "Invalid account config path"},
+		{name: "Given No ID", id: "", errorMsg: "Invalid customer config path"},
+		{name: "Given not existed ID", id: "toto", errorMsg: "Invalid customer config path"},
 		{name: "Given empty JSON file", id: "../../tests/config/customer_empty_test.json", errorMsg: "Impossible to map JSON file"},
 		{name: "Given empty CONTENT JSON file", id: "../../tests/config/customer_empty_content_test.json", errorMsg: "Impossible to Unmarshal JSON file"},
 		{name: "Given uncompleted address JSON file", id: "../../tests/config/customer_uncompleted_address_content.json", errorMsg: "Impossible to Unmarshal Address JSON file"},
