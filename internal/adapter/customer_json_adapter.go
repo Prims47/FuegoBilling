@@ -15,9 +15,9 @@ func NewCustomerJSONAdapter() CustomerAdapterInterface {
 	return &CustomerAdapter{}
 }
 
-func (a *CustomerAdapter) Request(id string) (CustomerAdapterResponse, error) {
+func (c *CustomerAdapter) Request(id string) (CustomerAdapterResponse, error) {
 	if _, err := os.Stat(id); err != nil {
-		return CustomerAdapterResponse{}, errors.Errorf("Invalid account config path")
+		return CustomerAdapterResponse{}, errors.Errorf("Invalid customer config path")
 	}
 
 	jsonFile, err := os.Open(id)
@@ -25,7 +25,7 @@ func (a *CustomerAdapter) Request(id string) (CustomerAdapterResponse, error) {
 	defer jsonFile.Close()
 
 	if err != nil {
-		return CustomerAdapterResponse{}, errors.Errorf("Invalid account config path")
+		return CustomerAdapterResponse{}, errors.Errorf("Invalid customer config path")
 	}
 
 	bytesValue, err := ioutil.ReadAll(jsonFile)
