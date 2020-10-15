@@ -6,6 +6,7 @@ import (
 
 	"fuegobyp-billing.com/internal/adapter"
 	"fuegobyp-billing.com/internal/repository"
+	"fuegobyp-billing.com/internal/services"
 )
 
 func main() {
@@ -15,7 +16,10 @@ func main() {
 	customerAdapter := adapter.NewCustomerJSONAdapter()
 	customerRepository := repository.NewCustomerRepository(customerAdapter)
 
-	cmd, err := newRootCmd(os.Stdout, accountRepository, customerRepository)
+	serviceAdapter := adapter.NewServiceJSONAdapter()
+	serviceRepository := repository.NewServiceRepository(serviceAdapter)
+
+	cmd, err := newRootCmd(os.Stdout, accountRepository, customerRepository, serviceRepository, &services.FormatFloat{}, &services.FormatInt{})
 
 	if err != nil {
 		fmt.Fprintln(os.Stderr, err)
@@ -28,10 +32,4 @@ func main() {
 
 		os.Exit(1)
 	}
-
-	// @todo:
-
-	// serviceTVA := model.TVA{Pourcent: 20}
-	// service := model.Service{Detail: "Prestation de développement Bivwak BNP Paribas", Quantity: 20, UnitPrice: 663, TVA: serviceTVA}
-
 }

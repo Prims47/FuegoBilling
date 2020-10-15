@@ -19,3 +19,9 @@ docker_mockgen_build:
 gen_mock: 
 	docker run -v $(PWD):/app -w /app fuegobilling/mockgen mockgen -source=internal/adapter/account_adapter_interface.go -destination=internal/repository/mock/account_adapter_mock.go -package=repository
 	docker run -v $(PWD):/app -w /app fuegobilling/mockgen mockgen -source=internal/adapter/customer_adapter_interface.go -destination=internal/repository/mock/customer_adapter_mock.go -package=repository
+	docker run -v $(PWD):/app -w /app fuegobilling/mockgen mockgen -source=internal/adapter/service_adapter_interface.go -destination=internal/repository/mock/service_adapter_mock.go -package=repository
+
+.PHONY: unit_test
+
+unit_test:
+	go test -v ./...

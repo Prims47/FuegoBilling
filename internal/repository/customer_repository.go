@@ -19,12 +19,12 @@ func NewCustomerRepository(adapter adapter.CustomerAdapterInterface) CustomerRep
 	return &CustomerRepository{Adapter: adapter}
 }
 
-func (a *CustomerRepository) Request(id string) (model.Customer, error) {
+func (c *CustomerRepository) Request(id string) (model.Customer, error) {
 	if id == "" {
 		return model.Customer{}, errors.New("Please give a valid params")
 	}
 
-	customerAdapterResponse, err := a.Adapter.Request(id)
+	customerAdapterResponse, err := c.Adapter.Request(id)
 
 	if err != nil {
 		return model.Customer{}, err
