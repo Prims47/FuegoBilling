@@ -15,10 +15,10 @@ import (
 	"github.com/spf13/cobra"
 )
 
-const desc = `ffkfkfkf`
+const desc = `Generate billing easly`
 const dateFormat = "02-01-2006"
 
-func NewGeneratePdfCmd(out io.Writer,
+func NewGeneratePDFCmd(out io.Writer,
 	accountRepository repository.AccountRepositoryInterface,
 	customerRepository repository.CustomerRepositoryInterface,
 	serviceRepository repository.ServiceRepositoryInterface,

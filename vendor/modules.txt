@@ -11,6 +11,8 @@ github.com/inconshreveable/mousetrap
 # github.com/jung-kurt/gofpdf v1.16.2
 ## explicit
 github.com/jung-kurt/gofpdf
+# github.com/mattn/go-shellwords v1.0.10
+## explicit
 # github.com/pkg/errors v0.8.1
 ## explicit
 github.com/pkg/errors

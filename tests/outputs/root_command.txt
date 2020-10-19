@@ -1,0 +1,13 @@
+fuegoBilling is a very fast tool billing generator
+
+Usage:
+  fuegoBilling [command]
+
+Available Commands:
+  generate-pdf Generate billing
+  help         Help about any command
+
+Flags:
+  -h, --help   help for fuegoBilling
+
+Use "fuegoBilling [command] --help" for more information about a command.

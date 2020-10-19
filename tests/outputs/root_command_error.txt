@@ -1,0 +1,2 @@
+Error: unknown command "pepito" for "fuegoBilling"
+Run 'fuegoBilling --help' for usage.

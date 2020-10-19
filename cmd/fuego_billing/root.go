@@ -20,7 +20,7 @@ func newRootCmd(out io.Writer,
 	}
 
 	rootCmd.AddCommand(
-		NewGeneratePdfCmd(out, accountRepository, customerRepository, serviceRepository, formatFloat, formatInt),
+		NewGeneratePDFCmd(out, accountRepository, customerRepository, serviceRepository, formatFloat, formatInt),
 	)
 
 	return rootCmd, nil
