@@ -35,7 +35,7 @@ func (s *ServiceRepository) Request(id string) (model.Service, error) {
 
 func parseServiceAdapterResponse(response adapter.ServiceAdapterResponse) (model.Service, error) {
 	if response.Detail == "" ||
-		response.Quantity < 1 ||
+		response.Quantity < 0.5 ||
 		response.UnitPrice < 1 ||
 		response.TVA.Pourcent < 1 {
 		return model.Service{}, errors.New("Error when parse Service. Data is not correct")
