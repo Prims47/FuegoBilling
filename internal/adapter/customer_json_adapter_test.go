@@ -20,12 +20,9 @@ func TestCustomerRequest(t *testing.T) {
 			ZipCode: "75006",
 		},
 		Company: CompanyCustomerResponse{
-			Siret:   "88462068300018",
-			Tva:     "FR77049322770",
-			Capital: 100.00,
-			RCS:     "Nanterre B",
-			NAF:     "6201Z",
-			Type:    "SARL",
+			Siret: "88462068300018",
+			Tva:   "FR77049322770",
+			Type:  "SARL",
 		},
 	}
 

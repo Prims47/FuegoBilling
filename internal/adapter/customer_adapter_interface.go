@@ -8,12 +8,9 @@ type AddressCustomerResponse struct {
 }
 
 type CompanyCustomerResponse struct {
-	Siret   string  `json:"siret"`
-	Tva     string  `json:"tva"`
-	Capital float32 `json:"capital"`
-	RCS     string  `json:"rcs"`
-	NAF     string  `json:"naf"`
-	Type    string  `json:"type"`
+	Siret string `json:"siret"`
+	Tva   string `json:"tva"`
+	Type  string `json:"type"`
 }
 
 type CustomerAdapterResponse struct {

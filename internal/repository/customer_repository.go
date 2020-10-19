@@ -41,9 +41,6 @@ func parseCustomerAdapterResponse(response adapter.CustomerAdapterResponse) (mod
 		response.Address.Country == "" ||
 		response.Company.Siret == "" ||
 		response.Company.Tva == "" ||
-		response.Company.Capital < 1 ||
-		response.Company.RCS == "" ||
-		response.Company.NAF == "" ||
 		response.Company.Type == "" {
 		return model.Customer{}, errors.New("Error when parse Customer. Data is not correct")
 	}
@@ -63,9 +60,9 @@ func mapCustomerAdapterResponseToModel(response adapter.CustomerAdapterResponse)
 		Company: model.Company{
 			Siret:   response.Company.Siret,
 			Tva:     response.Company.Tva,
-			Capital: response.Company.Capital,
-			NAF:     response.Company.NAF,
-			RCS:     response.Company.RCS,
+			Capital: 0,
+			NAF:     "",
+			RCS:     "",
 			Type:    response.Company.Type,
 		},
 	}
