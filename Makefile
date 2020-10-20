@@ -27,6 +27,12 @@ gen_mock:
 	docker run -v $(PWD):/app -w /app fuegobilling/mockgen mockgen -source=internal/services/format_float.go -destination=cmd/fuego_billing/mock/format_float_mock.go -package=cmd
 	docker run -v $(PWD):/app -w /app fuegobilling/mockgen mockgen -source=internal/services/format_int.go -destination=cmd/fuego_billing/mock/format_int_mock.go -package=cmd
 
+	docker run -v $(PWD):/app -w /app fuegobilling/mockgen mockgen -source=internal/repository/account_repository_interface.go -destination=internal/pdf/mock/account_repository_mock.go -package=pdf
+	docker run -v $(PWD):/app -w /app fuegobilling/mockgen mockgen -source=internal/repository/customer_repository_interface.go -destination=internal/pdf/mock/customer_repository_mock.go -package=pdf
+	docker run -v $(PWD):/app -w /app fuegobilling/mockgen mockgen -source=internal/repository/service_repository_interface.go -destination=internal/pdf/mock/service_repository_mock.go -package=pdf
+	docker run -v $(PWD):/app -w /app fuegobilling/mockgen mockgen -source=internal/services/format_float.go -destination=internal/pdf/mock/format_float_mock.go -package=pdf
+	docker run -v $(PWD):/app -w /app fuegobilling/mockgen mockgen -source=internal/services/format_int.go -destination=internal/pdf/mock/format_int_mock.go -package=pdf
+
 .PHONY: unit_test
 
 unit_test:

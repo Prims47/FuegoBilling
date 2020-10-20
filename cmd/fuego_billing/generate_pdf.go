@@ -17,6 +17,7 @@ import (
 
 const desc = `Generate billing easly`
 const dateFormat = "02-01-2006"
+const dateFormatToPDF = "2 Jan, 2006"
 
 func NewGeneratePDFCmd(out io.Writer,
 	accountRepository repository.AccountRepositoryInterface,
@@ -29,15 +30,6 @@ func NewGeneratePDFCmd(out io.Writer,
 		Short:   "Generate billing",
 		Long:    desc,
 		Aliases: []string{"gpdf"},
-		ValidArgsFunction: func(cmd *cobra.Command, args []string, toComplete string) ([]string, cobra.ShellCompDirective) {
-			if len(args) == 0 {
-				fmt.Println("ShellCompDirectiveDefault")
-				return nil, cobra.ShellCompDirectiveDefault
-			}
-
-			fmt.Println("ShellCompDirectiveNoFileComp")
-			return nil, cobra.ShellCompDirectiveNoFileComp
-		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			configAccountPath, configCustomerPath, configServicePath, err := handleConfigs(cmd)
 
@@ -63,8 +55,8 @@ func NewGeneratePDFCmd(out io.Writer,
 			pdfName := cleanPDFName(billingNumber, customer.Name)
 			pdfPath := handlePDFPath(cmd)
 
-			billingPDF := pdf.NewBillingPDF(pdfPath, pdfName, account, customer, service, formatInt, formatFloat, billingNumber)
-			billingPDF.CreatePdf()
+			billingPDF := pdf.NewBillingPDF(pdfPath, pdfName, account, customer, service, formatInt, formatFloat, billingNumber, time.Now().Format(dateFormatToPDF))
+			billingPDF.CreatePDF()
 
 			return nil
 		},

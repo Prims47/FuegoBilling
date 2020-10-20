@@ -1,0 +1,14 @@
+Error: Please give a valid customer config path
+Usage:
+  generate-pdf [flags]
+
+Aliases:
+  generate-pdf, gpdf
+
+Flags:
+  -a, --account-config-path string    JSON Account Config Path
+  -c, --customer-config-path string   JSON Customer Config Path
+  -h, --help                          help for generate-pdf
+  -p, --pdf-path string               PDF Path
+  -s, --service-config-path string    JSON Service Config Path
+
