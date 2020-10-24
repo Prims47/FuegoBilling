@@ -5,10 +5,10 @@ import (
 	"testing"
 	"time"
 
-	"fuegobyp-billing.com/internal/model"
-	generatedMock "fuegobyp-billing.com/internal/pdf/mock"
 	"github.com/golang/mock/gomock"
 	"github.com/jung-kurt/gofpdf"
+	"github.com/prims47/FuegoBilling/internal/model"
+	generatedMock "github.com/prims47/FuegoBilling/internal/pdf/mock"
 )
 
 const generatedPDFPath = "../../tests/generated_pdf"
@@ -20,45 +20,30 @@ func TestGeneratePDF(t *testing.T) {
 
 	mockCtrl := gomock.NewController(t)
 
-	accountRepositoryMock := generatedMock.NewMockAccountRepositoryInterface(mockCtrl)
-	customerRepositoryMock := generatedMock.NewMockCustomerRepositoryInterface(mockCtrl)
-	serviceRepositoryMock := generatedMock.NewMockServiceRepositoryInterface(mockCtrl)
 	formatFloatMock := generatedMock.NewMockFormatFloatInterface(mockCtrl)
 	formatIntMock := generatedMock.NewMockFormatIntInterface(mockCtrl)
 
 	testCases := []struct {
-		testName                            string
-		pdfName                             string
-		expectedOutput                      string
-		accountRepositoryMockRequestParams  string
-		accountRepositoryMockTimes          int
-		accountRepositoryMockModel          model.Account
-		accountRepositoryMockError          error
-		customerRepositoryMockRequestParams string
-		customerRepositoryMockTimes         int
-		customerRepositoryMockModel         model.Customer
-		customerRepositoryMockError         error
-		serviceRepositoryMockRequestParams  string
-		serviceRepositoryMockTimes          int
-		serviceRepositoryMockModel          model.Service
-		serviceRepositoryMockError          error
-		formatFloatMockRequestParams        float32
-		formatFloatMockTimes                int
-		formatFloatMockReturn               string
-		formatIntMockRequestParams1         int
-		formatIntMockRequestParams2         int
-		formatIntMockRequestParams3         int
-		formatIntMockRequestParams4         int
-		formatIntMockTimes                  int
-		formatIntMockReturn                 string
-		args                                []string
+		testName                     string
+		pdfName                      string
+		expectedOutput               string
+		accountRepositoryMockModel   model.Account
+		customerRepositoryMockModel  model.Customer
+		serviceRepositoryMockModel   model.Service
+		formatFloatMockRequestParams float32
+		formatFloatMockTimes         int
+		formatFloatMockReturn        string
+		formatIntMockRequestParams1  int
+		formatIntMockRequestParams2  int
+		formatIntMockRequestParams3  int
+		formatIntMockRequestParams4  int
+		formatIntMockTimes           int
+		formatIntMockReturn          string
 	}{
 		{
-			testName:                           "Given generated PDF",
-			pdfName:                            "test_generated_billing",
-			expectedOutput:                     "../../tests/pdf/test_generated_billing.pdf",
-			accountRepositoryMockRequestParams: "../../tests/inputs/account.json",
-			accountRepositoryMockTimes:         1,
+			testName:       "Given generated PDF",
+			pdfName:        "test_generated_billing",
+			expectedOutput: "../../tests/pdf/test_generated_billing.pdf",
 			accountRepositoryMockModel: model.Account{
 				Name:      "Pepito",
 				FirstName: "Ilan",
@@ -79,9 +64,6 @@ func TestGeneratePDF(t *testing.T) {
 					Type:    "SARL",
 				},
 			},
-			accountRepositoryMockError:          nil,
-			customerRepositoryMockRequestParams: "../../tests/inputs/customer.json",
-			customerRepositoryMockTimes:         1,
 			customerRepositoryMockModel: model.Customer{
 				Name: "Tesla",
 				Address: model.Address{
@@ -99,16 +81,12 @@ func TestGeneratePDF(t *testing.T) {
 					Type:    "SARL",
 				},
 			},
-			customerRepositoryMockError:        nil,
-			serviceRepositoryMockRequestParams: "../../tests/inputs/service.json",
-			serviceRepositoryMockTimes:         1,
 			serviceRepositoryMockModel: model.Service{
 				Detail:    "Prestation Pepito Fuego by P",
 				Quantity:  10,
 				UnitPrice: 663,
 				TVA:       model.TVA{Pourcent: 20},
 			},
-			serviceRepositoryMockError:   nil,
 			formatFloatMockRequestParams: 20,
 			formatFloatMockTimes:         1,
 			formatFloatMockReturn:        "20",
@@ -118,37 +96,12 @@ func TestGeneratePDF(t *testing.T) {
 			formatIntMockRequestParams4:  7956,
 			formatIntMockTimes:           1,
 			formatIntMockReturn:          "38523",
-			args: []string{
-				"--account-config-path",
-				"../../tests/inputs/account.json",
-				"--customer-config-path",
-				"../../tests/inputs/customer.json",
-				"--service-config-path",
-				"../../tests/inputs/service.json",
-				"--pdf-path",
-				generatedPDFPath,
-			},
 		},
 	}
 
 	for _, tc := range testCases {
 		t.Run(tc.testName, func(t *testing.T) {
 			defer deleteGeneratedPDF()
-
-			accountRepositoryMock.EXPECT().
-				Request(gomock.Eq(tc.accountRepositoryMockRequestParams)).
-				Times(tc.accountRepositoryMockTimes).
-				Return(tc.accountRepositoryMockModel, tc.accountRepositoryMockError)
-
-			customerRepositoryMock.EXPECT().
-				Request(gomock.Eq(tc.customerRepositoryMockRequestParams)).
-				Times(tc.customerRepositoryMockTimes).
-				Return(tc.customerRepositoryMockModel, tc.customerRepositoryMockError)
-
-			serviceRepositoryMock.EXPECT().
-				Request(gomock.Eq(tc.serviceRepositoryMockRequestParams)).
-				Times(tc.serviceRepositoryMockTimes).
-				Return(tc.serviceRepositoryMockModel, tc.serviceRepositoryMockError)
 
 			formatFloatMock.EXPECT().
 				Float32ToString(tc.formatFloatMockRequestParams).

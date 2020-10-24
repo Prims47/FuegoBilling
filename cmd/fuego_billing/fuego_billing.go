@@ -4,9 +4,9 @@ import (
 	"fmt"
 	"os"
 
-	"fuegobyp-billing.com/internal/adapter"
-	"fuegobyp-billing.com/internal/repository"
-	"fuegobyp-billing.com/internal/services"
+	"github.com/prims47/FuegoBilling/internal/adapter"
+	"github.com/prims47/FuegoBilling/internal/repository"
+	"github.com/prims47/FuegoBilling/internal/services"
 )
 
 func main() {

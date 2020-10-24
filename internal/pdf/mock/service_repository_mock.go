@@ -7,8 +7,8 @@ package pdf
 import (
 	reflect "reflect"
 
-	model "fuegobyp-billing.com/internal/model"
 	gomock "github.com/golang/mock/gomock"
+	model "github.com/prims47/FuegoBilling/internal/model"
 )
 
 // MockServiceRepositoryInterface is a mock of ServiceRepositoryInterface interface.

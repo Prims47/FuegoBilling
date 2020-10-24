@@ -7,9 +7,9 @@ import (
 	"os"
 	"testing"
 
-	generatedMock "fuegobyp-billing.com/cmd/fuego_billing/mock"
-	"fuegobyp-billing.com/internal/model"
 	"github.com/golang/mock/gomock"
+	generatedMock "github.com/prims47/FuegoBilling/cmd/fuego_billing/mock"
+	"github.com/prims47/FuegoBilling/internal/model"
 	"github.com/stretchr/testify/assert"
 )
 

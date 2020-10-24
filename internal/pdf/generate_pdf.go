@@ -3,9 +3,9 @@ package pdf
 import (
 	"fmt"
 
-	"fuegobyp-billing.com/internal/model"
-	"fuegobyp-billing.com/internal/services"
 	"github.com/jung-kurt/gofpdf"
+	"github.com/prims47/FuegoBilling/internal/model"
+	"github.com/prims47/FuegoBilling/internal/services"
 )
 
 type BillingPDFInterface interface {

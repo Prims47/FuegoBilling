@@ -14,9 +14,9 @@ build_macos:
 docker_mockgen_build:
 	docker build -t fuegobilling/mockgen .
 
-.PHONY: gen_mock
+.PHONY: docker_gen_mock
 
-gen_mock: 
+docker_gen_mock: 
 	docker run -v $(PWD):/app -w /app fuegobilling/mockgen mockgen -source=internal/adapter/account_adapter_interface.go -destination=internal/repository/mock/account_adapter_mock.go -package=repository
 	docker run -v $(PWD):/app -w /app fuegobilling/mockgen mockgen -source=internal/adapter/customer_adapter_interface.go -destination=internal/repository/mock/customer_adapter_mock.go -package=repository
 	docker run -v $(PWD):/app -w /app fuegobilling/mockgen mockgen -source=internal/adapter/service_adapter_interface.go -destination=internal/repository/mock/service_adapter_mock.go -package=repository
@@ -32,6 +32,23 @@ gen_mock:
 	docker run -v $(PWD):/app -w /app fuegobilling/mockgen mockgen -source=internal/repository/service_repository_interface.go -destination=internal/pdf/mock/service_repository_mock.go -package=pdf
 	docker run -v $(PWD):/app -w /app fuegobilling/mockgen mockgen -source=internal/services/format_float.go -destination=internal/pdf/mock/format_float_mock.go -package=pdf
 	docker run -v $(PWD):/app -w /app fuegobilling/mockgen mockgen -source=internal/services/format_int.go -destination=internal/pdf/mock/format_int_mock.go -package=pdf
+
+gen_mock:
+	mockgen -source=internal/adapter/account_adapter_interface.go -destination=internal/repository/mock/account_adapter_mock.go -package=repository
+	mockgen -source=internal/adapter/customer_adapter_interface.go -destination=internal/repository/mock/customer_adapter_mock.go -package=repository
+	mockgen -source=internal/adapter/service_adapter_interface.go -destination=internal/repository/mock/service_adapter_mock.go -package=repository
+
+	mockgen -source=internal/repository/account_repository_interface.go -destination=cmd/fuego_billing/mock/account_repository_mock.go -package=cmd
+	mockgen -source=internal/repository/customer_repository_interface.go -destination=cmd/fuego_billing/mock/customer_repository_mock.go -package=cmd
+	mockgen -source=internal/repository/service_repository_interface.go -destination=cmd/fuego_billing/mock/service_repository_mock.go -package=cmd
+	mockgen -source=internal/services/format_float.go -destination=cmd/fuego_billing/mock/format_float_mock.go -package=cmd
+	mockgen -source=internal/services/format_int.go -destination=cmd/fuego_billing/mock/format_int_mock.go -package=cmd
+
+	mockgen -source=internal/repository/account_repository_interface.go -destination=internal/pdf/mock/account_repository_mock.go -package=pdf
+	mockgen -source=internal/repository/customer_repository_interface.go -destination=internal/pdf/mock/customer_repository_mock.go -package=pdf
+	mockgen -source=internal/repository/service_repository_interface.go -destination=internal/pdf/mock/service_repository_mock.go -package=pdf
+	mockgen -source=internal/services/format_float.go -destination=internal/pdf/mock/format_float_mock.go -package=pdf
+	mockgen -source=internal/services/format_int.go -destination=internal/pdf/mock/format_int_mock.go -package=pdf
 
 .PHONY: unit_test
 

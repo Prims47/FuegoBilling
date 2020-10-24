@@ -5,11 +5,11 @@ import (
 	"io/ioutil"
 	"testing"
 
-	generatedMock "fuegobyp-billing.com/cmd/fuego_billing/mock"
-	"fuegobyp-billing.com/internal/model"
-	"fuegobyp-billing.com/internal/repository"
-	"fuegobyp-billing.com/internal/services"
 	"github.com/golang/mock/gomock"
+	generatedMock "github.com/prims47/FuegoBilling/cmd/fuego_billing/mock"
+	"github.com/prims47/FuegoBilling/internal/model"
+	"github.com/prims47/FuegoBilling/internal/repository"
+	"github.com/prims47/FuegoBilling/internal/services"
 	"github.com/stretchr/testify/assert"
 )
 

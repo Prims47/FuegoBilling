@@ -1,0 +1,46 @@
+name: Features
+
+on:
+  push:
+    branches: 
+      - feat/**
+  pull_request: 
+    branches:
+      - feat/**
+
+jobs:
+  linter_unit_test:
+    strategy:
+      matrix:
+        go-version: [1.14.x]
+        # go-version: [1.14.x, 1.15.x]
+        # platform: [ubuntu-latest, macos-latest, windows-latest]
+        platform: [ubuntu-latest]
+    name: Unit Test
+    runs-on: ${{ matrix.platform }}
+
+    steps:
+      - name: Set up Go 1.x
+        uses: actions/setup-go@v2
+        with:
+          go-version: ${{ matrix.go-version }}
+
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Dependencies and generate mock
+        run: |
+          go get github.com/golang/mock/mockgen
+
+          make vendor
+
+          make gen_mock
+
+      # - name: Linter
+      #   uses: golangci/golangci-lint-action@v2
+      #   with:
+      #     version: v1.29
+
+      - name: Launch unit Test
+        run: make unit_test
+      

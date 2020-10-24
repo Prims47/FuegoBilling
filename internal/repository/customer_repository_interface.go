@@ -1,7 +1,7 @@
 package repository
 
 import (
-	"fuegobyp-billing.com/internal/model"
+	"github.com/prims47/FuegoBilling/internal/model"
 )
 
 type CustomerRepositoryInterface interface {

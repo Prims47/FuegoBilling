@@ -7,8 +7,8 @@ package repository
 import (
 	reflect "reflect"
 
-	adapter "fuegobyp-billing.com/internal/adapter"
 	gomock "github.com/golang/mock/gomock"
+	adapter "github.com/prims47/FuegoBilling/internal/adapter"
 )
 
 // MockCustomerAdapterInterface is a mock of CustomerAdapterInterface interface.
