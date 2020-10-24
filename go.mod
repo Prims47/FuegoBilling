@@ -1,4 +1,4 @@
-module fuegobyp-billing.com
+module github.com/prims47/FuegoBilling
 
 go 1.14
 

@@ -2,15 +2,14 @@ package pdf
 
 import (
 	"fmt"
-	"time"
 
-	"fuegobyp-billing.com/internal/model"
-	"fuegobyp-billing.com/internal/services"
 	"github.com/jung-kurt/gofpdf"
+	"github.com/prims47/FuegoBilling/internal/model"
+	"github.com/prims47/FuegoBilling/internal/services"
 )
 
 type BillingPDFInterface interface {
-	CreatePdf()
+	CreatePDF()
 }
 
 type BillingPDF struct {
@@ -22,6 +21,7 @@ type BillingPDF struct {
 	FormatInt     services.FormatIntInterface
 	FormatFloat   services.FormatFloatInterface
 	BillingNumber string
+	DateTo        string
 }
 
 func NewBillingPDF(pdfPath string,
@@ -31,7 +31,8 @@ func NewBillingPDF(pdfPath string,
 	service model.Service,
 	formatInt services.FormatIntInterface,
 	formatFloat services.FormatFloatInterface,
-	billingNumber string) BillingPDFInterface {
+	billingNumber string,
+	dateTo string) BillingPDFInterface {
 	return &BillingPDF{PdfName: pdfName,
 		PdfPath:       pdfPath,
 		Account:       account,
@@ -39,10 +40,9 @@ func NewBillingPDF(pdfPath string,
 		Service:       service,
 		FormatInt:     formatInt,
 		FormatFloat:   formatFloat,
-		BillingNumber: billingNumber}
+		BillingNumber: billingNumber,
+		DateTo:        dateTo}
 }
-
-const dateFormat = "2 Jan, 2006"
 
 func handleHeader(pdf *gofpdf.Fpdf, b *BillingPDF) {
 	tr := pdf.UnicodeTranslatorFromDescriptor("")
@@ -59,7 +59,7 @@ func handleHeader(pdf *gofpdf.Fpdf, b *BillingPDF) {
 
 		pdf.Cell(10, 10, tr("Référence de facture : "+b.BillingNumber))
 		pdf.Ln(8)
-		pdf.Cell(10, 10, tr(fmt.Sprintf("Émise le %s", time.Now().Format(dateFormat)))) // @todo: inject date
+		pdf.Cell(10, 10, tr(fmt.Sprintf("Émise le %s", b.DateTo)))
 	}, true)
 }
 
@@ -107,7 +107,7 @@ func cleanTotalTTC(b *BillingPDF) string {
 /*
 CreatePdf func
 */
-func (b *BillingPDF) CreatePdf() {
+func (b *BillingPDF) CreatePDF() {
 	pdf := gofpdf.New("P", "mm", "A4", "")
 	pdf.SetTopMargin(30)
 	tr := pdf.UnicodeTranslatorFromDescriptor("")

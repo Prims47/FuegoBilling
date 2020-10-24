@@ -3,13 +3,9 @@ package repository
 import (
 	"errors"
 
-	"fuegobyp-billing.com/internal/adapter"
-	"fuegobyp-billing.com/internal/model"
+	"github.com/prims47/FuegoBilling/internal/adapter"
+	"github.com/prims47/FuegoBilling/internal/model"
 )
-
-type ServiceRepositoryInterface interface {
-	Request(id string) (model.Service, error)
-}
 
 type ServiceRepository struct {
 	Adapter adapter.ServiceAdapterInterface

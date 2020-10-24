@@ -16,3 +16,4 @@
 
 pdf/*.pdf
 .DS_Store
+bin/*

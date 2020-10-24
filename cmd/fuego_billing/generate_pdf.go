@@ -7,18 +7,19 @@ import (
 	"strings"
 	"time"
 
-	"fuegobyp-billing.com/internal/model"
-	"fuegobyp-billing.com/internal/pdf"
-	"fuegobyp-billing.com/internal/repository"
-	"fuegobyp-billing.com/internal/services"
 	"github.com/pkg/errors"
+	"github.com/prims47/FuegoBilling/internal/model"
+	"github.com/prims47/FuegoBilling/internal/pdf"
+	"github.com/prims47/FuegoBilling/internal/repository"
+	"github.com/prims47/FuegoBilling/internal/services"
 	"github.com/spf13/cobra"
 )
 
-const desc = `ffkfkfkf`
+const desc = `Generate billing easly`
 const dateFormat = "02-01-2006"
+const dateFormatToPDF = "2 Jan, 2006"
 
-func NewGeneratePdfCmd(out io.Writer,
+func NewGeneratePDFCmd(out io.Writer,
 	accountRepository repository.AccountRepositoryInterface,
 	customerRepository repository.CustomerRepositoryInterface,
 	serviceRepository repository.ServiceRepositoryInterface,
@@ -29,15 +30,6 @@ func NewGeneratePdfCmd(out io.Writer,
 		Short:   "Generate billing",
 		Long:    desc,
 		Aliases: []string{"gpdf"},
-		ValidArgsFunction: func(cmd *cobra.Command, args []string, toComplete string) ([]string, cobra.ShellCompDirective) {
-			if len(args) == 0 {
-				fmt.Println("ShellCompDirectiveDefault")
-				return nil, cobra.ShellCompDirectiveDefault
-			}
-
-			fmt.Println("ShellCompDirectiveNoFileComp")
-			return nil, cobra.ShellCompDirectiveNoFileComp
-		},
 		RunE: func(cmd *cobra.Command, args []string) error {
 			configAccountPath, configCustomerPath, configServicePath, err := handleConfigs(cmd)
 
@@ -63,8 +55,8 @@ func NewGeneratePdfCmd(out io.Writer,
 			pdfName := cleanPDFName(billingNumber, customer.Name)
 			pdfPath := handlePDFPath(cmd)
 
-			billingPDF := pdf.NewBillingPDF(pdfPath, pdfName, account, customer, service, formatInt, formatFloat, billingNumber)
-			billingPDF.CreatePdf()
+			billingPDF := pdf.NewBillingPDF(pdfPath, pdfName, account, customer, service, formatInt, formatFloat, billingNumber, time.Now().Format(dateFormatToPDF))
+			billingPDF.CreatePDF()
 
 			return nil
 		},

@@ -4,10 +4,10 @@ import (
 	"errors"
 	"testing"
 
-	"fuegobyp-billing.com/internal/adapter"
-	"fuegobyp-billing.com/internal/model"
-	mock "fuegobyp-billing.com/internal/repository/mock"
 	"github.com/golang/mock/gomock"
+	"github.com/prims47/FuegoBilling/internal/adapter"
+	"github.com/prims47/FuegoBilling/internal/model"
+	mock "github.com/prims47/FuegoBilling/internal/repository/mock"
 	"github.com/stretchr/testify/assert"
 )
 
@@ -133,66 +133,6 @@ func TestCustomerRequest(t *testing.T) {
 			},
 			errRepository: "Error when parse Customer. Data is not correct",
 		},
-		{testName: "Given adapter return without Company RCS",
-			params: "id",
-			times:  1,
-			adapterResponse: adapter.CustomerAdapterResponse{Name: "Pepito",
-				Address: adapter.AddressCustomerResponse{
-					Street:  "770 rue du Fuego",
-					ZipCode: "75006",
-					City:    "Paris",
-					Country: "France",
-				},
-				Company: adapter.CompanyCustomerResponse{
-					Siret:   "11212",
-					Tva:     "21212",
-					Capital: 100.47,
-					RCS:     "",
-				},
-			},
-			errRepository: "Error when parse Customer. Data is not correct",
-		},
-		{testName: "Given adapter return without Company NAF",
-			params: "id",
-			times:  1,
-			adapterResponse: adapter.CustomerAdapterResponse{Name: "Pepito",
-				Address: adapter.AddressCustomerResponse{
-					Street:  "770 rue du Fuego",
-					ZipCode: "75006",
-					City:    "Paris",
-					Country: "France",
-				},
-				Company: adapter.CompanyCustomerResponse{
-					Siret:   "11212",
-					Tva:     "21212",
-					Capital: 100.47,
-					RCS:     "Paris",
-					NAF:     "",
-				},
-			},
-			errRepository: "Error when parse Customer. Data is not correct",
-		},
-		{testName: "Given adapter return without Company Type",
-			params: "id",
-			times:  1,
-			adapterResponse: adapter.CustomerAdapterResponse{Name: "Pepito",
-				Address: adapter.AddressCustomerResponse{
-					Street:  "770 rue du Fuego",
-					ZipCode: "75006",
-					City:    "Paris",
-					Country: "France",
-				},
-				Company: adapter.CompanyCustomerResponse{
-					Siret:   "11212",
-					Tva:     "21212",
-					Capital: 100.47,
-					RCS:     "Paris",
-					NAF:     "NAF",
-					Type:    "",
-				},
-			},
-			errRepository: "Error when parse Customer. Data is not correct",
-		},
 		{testName: "Given adapter correct response",
 			params: "id",
 			times:  1,
@@ -205,12 +145,9 @@ func TestCustomerRequest(t *testing.T) {
 					Country: "France",
 				},
 				Company: adapter.CompanyCustomerResponse{
-					Siret:   "11212",
-					Tva:     "21212",
-					Capital: 100.47,
-					RCS:     "Paris",
-					NAF:     "NAF",
-					Type:    "SARL",
+					Siret: "11212",
+					Tva:   "21212",
+					Type:  "SARL",
 				},
 			},
 			model: model.Customer{
@@ -224,9 +161,9 @@ func TestCustomerRequest(t *testing.T) {
 				Company: model.Company{
 					Siret:   "11212",
 					Tva:     "21212",
-					Capital: 100.47,
-					RCS:     "Paris",
-					NAF:     "NAF",
+					Capital: 0,
+					RCS:     "",
+					NAF:     "",
 					Type:    "SARL",
 				},
 			},
