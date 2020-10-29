@@ -1,13 +1,14 @@
 package main
 
 import (
+	"bytes"
 	"fmt"
 	"io"
-	"os"
 	"strings"
 	"time"
 
 	"github.com/pkg/errors"
+	"github.com/prims47/FuegoBilling/internal/exporter"
 	"github.com/prims47/FuegoBilling/internal/model"
 	"github.com/prims47/FuegoBilling/internal/pdf"
 	"github.com/prims47/FuegoBilling/internal/repository"
@@ -24,7 +25,8 @@ func NewGeneratePDFCmd(out io.Writer,
 	customerRepository repository.CustomerRepositoryInterface,
 	serviceRepository repository.ServiceRepositoryInterface,
 	formatFloat services.FormatFloatInterface,
-	formatInt services.FormatIntInterface) *cobra.Command {
+	formatInt services.FormatIntInterface,
+	exporterContext exporter.ExporterContextInterface) *cobra.Command {
 	cmd := &cobra.Command{
 		Use:     "generate-pdf",
 		Short:   "Generate billing",
@@ -53,10 +55,19 @@ func NewGeneratePDFCmd(out io.Writer,
 			billingNumber := billing.GetBillingNumber()
 
 			pdfName := cleanPDFName(billingNumber, customer.Name)
-			pdfPath := handlePDFPath(cmd)
 
-			billingPDF := pdf.NewBillingPDF(pdfPath, pdfName, account, customer, service, formatInt, formatFloat, billingNumber, time.Now().Format(dateFormatToPDF))
+			buf := new(bytes.Buffer)
+
+			billingPDF := pdf.NewBillingPDF(account, customer, service, formatInt, formatFloat, billingNumber, time.Now().Format(dateFormatToPDF), buf)
 			billingPDF.CreatePDF()
+
+			exportFlag, _ := cmd.Flags().GetString("export")
+
+			exporterError := exporterContext.Save(pdfName, exportFlag, buf.Bytes())
+
+			if exporterError != nil {
+				return exporterError
+			}
 
 			return nil
 		},
@@ -65,13 +76,13 @@ func NewGeneratePDFCmd(out io.Writer,
 	cmd.Flags().StringP("account-config-path", "a", "", "JSON Account Config Path")
 	cmd.Flags().StringP("customer-config-path", "c", "", "JSON Customer Config Path")
 	cmd.Flags().StringP("service-config-path", "s", "", "JSON Service Config Path")
-	cmd.Flags().StringP("pdf-path", "p", "", "PDF Path")
+	cmd.Flags().StringP("export", "e", "", "Exporter provider (ex: local, AWS)")
 
 	return cmd
 }
 
 func cleanPDFName(billingNumber string, customerName string) string {
-	return fmt.Sprintf("billing-%s-customer-%s-date-to-%s", billingNumber, strings.Replace(strings.ToLower(customerName), " ", "-", -1), time.Now().Format(dateFormat))
+	return fmt.Sprintf("billing-%s-customer-%s-date-to-%s.pdf", billingNumber, strings.Replace(strings.ToLower(customerName), " ", "-", -1), time.Now().Format(dateFormat))
 }
 
 func handleConfigs(cmd *cobra.Command) (string, string, string, error) {
@@ -121,18 +132,4 @@ func handleRepositories(accountRepository repository.AccountRepositoryInterface,
 	}
 
 	return account, customer, service, nil
-}
-
-func handlePDFPath(cmd *cobra.Command) string {
-	pdfPath, err := cmd.Flags().GetString("pdf-path")
-
-	if err != nil || pdfPath == "" {
-		pdfPath = "pdf"
-	}
-
-	if _, err := os.Stat(pdfPath); err != nil {
-		os.Mkdir(pdfPath, os.ModePerm)
-	}
-
-	return pdfPath
 }

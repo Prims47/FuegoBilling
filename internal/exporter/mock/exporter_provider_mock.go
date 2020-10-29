@@ -34,17 +34,17 @@ func (m *MockExporterProviderInterface) EXPECT() *MockExporterProviderInterfaceM
 }
 
 // Save mocks base method.
-func (m *MockExporterProviderInterface) Save(data []byte) error {
+func (m *MockExporterProviderInterface) Save(fileName string, data []byte) error {
 	m.ctrl.T.Helper()
-	ret := m.ctrl.Call(m, "Save", data)
+	ret := m.ctrl.Call(m, "Save", fileName, data)
 	ret0, _ := ret[0].(error)
 	return ret0
 }
 
 // Save indicates an expected call of Save.
-func (mr *MockExporterProviderInterfaceMockRecorder) Save(data interface{}) *gomock.Call {
+func (mr *MockExporterProviderInterfaceMockRecorder) Save(fileName, data interface{}) *gomock.Call {
 	mr.mock.ctrl.T.Helper()
-	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Save", reflect.TypeOf((*MockExporterProviderInterface)(nil).Save), data)
+	return mr.mock.ctrl.RecordCallWithMethodType(mr.mock, "Save", reflect.TypeOf((*MockExporterProviderInterface)(nil).Save), fileName, data)
 }
 
 // CanSave mocks base method.

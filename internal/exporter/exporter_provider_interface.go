@@ -1,6 +1,6 @@
 package exporter
 
 type ExporterProviderInterface interface {
-	Save(data []byte) error
+	Save(fileName string, data []byte) error
 	CanSave(exporterProviderName string) bool
 }

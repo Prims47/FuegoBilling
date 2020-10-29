@@ -20,6 +20,7 @@ func TestExpoterContext(t *testing.T) {
 
 	testCases := []struct {
 		testName              string
+		fileName              string
 		exporterCanSaveParams string
 		exporterCanSaveTimes  int
 		exporterCanSaveReturn bool
@@ -31,6 +32,7 @@ func TestExpoterContext(t *testing.T) {
 	}{
 		{
 			testName:              "Given save without params",
+			fileName:              "pepito.pdf",
 			saveParams:            "",
 			saveReturn:            errors.New("No provider found"),
 			exporterCanSaveParams: "",
@@ -42,6 +44,7 @@ func TestExpoterContext(t *testing.T) {
 		},
 		{
 			testName:              "Given save without good params",
+			fileName:              "pepito.pdf",
 			saveParams:            "fuegobyp",
 			saveReturn:            errors.New("No provider found"),
 			exporterCanSaveParams: "fuegobyp",
@@ -62,6 +65,17 @@ func TestExpoterContext(t *testing.T) {
 			exporterSaveTimes:     1,
 			exporterSaveReturn:    nil,
 		},
+		{
+			testName:              "Given save with good params and error when provider save",
+			saveParams:            "aws",
+			saveReturn:            errors.New("No esta bueno my amigo!"),
+			exporterCanSaveParams: "aws",
+			exporterCanSaveTimes:  1,
+			exporterCanSaveReturn: true,
+			exporterSaveParams:    []byte("hello"),
+			exporterSaveTimes:     1,
+			exporterSaveReturn:    errors.New("No esta bueno my amigo!"),
+		},
 	}
 
 	// When / Then
@@ -69,13 +83,13 @@ func TestExpoterContext(t *testing.T) {
 	for _, tc := range testCases {
 		t.Run(tc.testName, func(t *testing.T) {
 			exporterProviderMock.EXPECT().CanSave(tc.exporterCanSaveParams).Times(tc.exporterCanSaveTimes).Return(tc.exporterCanSaveReturn)
-			exporterProviderMock.EXPECT().Save(tc.exporterSaveParams).Times(tc.exporterSaveTimes).Return(tc.exporterSaveReturn)
+			exporterProviderMock.EXPECT().Save(tc.fileName, tc.exporterSaveParams).Times(tc.exporterSaveTimes).Return(tc.exporterSaveReturn)
 
 			providers := []ExporterProviderInterface{exporterProviderMock}
 
 			sut := NewExporterProviderContext(providers)
 
-			err := sut.Save(tc.saveParams, []byte("hello"))
+			err := sut.Save(tc.fileName, tc.saveParams, []byte("hello"))
 
 			assert.Equal(t, tc.saveReturn, err)
 		})

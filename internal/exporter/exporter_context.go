@@ -12,11 +12,10 @@ func NewExporterProviderContext(providers []ExporterProviderInterface) ExporterC
 	return &ExporterContext{providers: providers}
 }
 
-func (e *ExporterContext) Save(exporterName string, data []byte) error {
+func (e *ExporterContext) Save(fileName string, exporterName string, data []byte) error {
 	for _, provider := range e.providers {
 		if provider.CanSave(exporterName) {
-			provider.Save(data)
-			return nil
+			return provider.Save(fileName, data)
 		}
 	}
 

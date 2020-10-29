@@ -25,6 +25,7 @@ func TestGeneratePDFCmd(t *testing.T) {
 	serviceRepositoryMock := generatedMock.NewMockServiceRepositoryInterface(mockCtrl)
 	formatFloatMock := generatedMock.NewMockFormatFloatInterface(mockCtrl)
 	formatIntMock := generatedMock.NewMockFormatIntInterface(mockCtrl)
+	exporterMock := generatedMock.NewMockExporterContextInterface(mockCtrl)
 
 	testCases := []struct {
 		testName                            string
@@ -51,6 +52,9 @@ func TestGeneratePDFCmd(t *testing.T) {
 		formatIntMockTimes                  int
 		formatIntMockReturn                 string
 		args                                []string
+		exporterMockParamsType              string
+		exporterMockTimes                   int
+		exporterMockReturn                  error
 	}{
 		{
 			testName:                            "Given pass without account-config-path",
@@ -76,6 +80,8 @@ func TestGeneratePDFCmd(t *testing.T) {
 			formatIntMockRequestParams4:         0,
 			formatIntMockTimes:                  0,
 			formatIntMockReturn:                 "",
+			exporterMockParamsType:              "",
+			exporterMockTimes:                   0,
 		},
 		{
 			testName:                            "Given pass account-config-path without real value",
@@ -102,6 +108,8 @@ func TestGeneratePDFCmd(t *testing.T) {
 			formatIntMockTimes:                  0,
 			formatIntMockReturn:                 "",
 			args:                                []string{"--account-config-path"},
+			exporterMockParamsType:              "",
+			exporterMockTimes:                   0,
 		},
 		{
 			testName:                            "Given pass without customer-config-path",
@@ -128,6 +136,8 @@ func TestGeneratePDFCmd(t *testing.T) {
 			formatIntMockTimes:                  0,
 			formatIntMockReturn:                 "",
 			args:                                []string{"--account-config-path", "../../tests/inputs/account.json"},
+			exporterMockParamsType:              "",
+			exporterMockTimes:                   0,
 		},
 		{
 			testName:                            "Given pass customer-config-path without real value",
@@ -154,6 +164,8 @@ func TestGeneratePDFCmd(t *testing.T) {
 			formatIntMockTimes:                  0,
 			formatIntMockReturn:                 "",
 			args:                                []string{"--account-config-path", "../../tests/inputs/account.json", "--customer-config-path"},
+			exporterMockParamsType:              "",
+			exporterMockTimes:                   0,
 		},
 		{
 			testName:                            "Given pass without service-config-path",
@@ -185,6 +197,8 @@ func TestGeneratePDFCmd(t *testing.T) {
 				"--customer-config-path",
 				"../../tests/inputs/customer.json",
 			},
+			exporterMockParamsType: "",
+			exporterMockTimes:      0,
 		},
 		{
 			testName:                            "Given pass service-config-path without real value",
@@ -217,6 +231,8 @@ func TestGeneratePDFCmd(t *testing.T) {
 				"../../tests/inputs/customer.json",
 				"--service-config-path",
 			},
+			exporterMockParamsType: "",
+			exporterMockTimes:      0,
 		},
 		{
 			testName:                            "Given with AccountRepository with error",
@@ -250,6 +266,8 @@ func TestGeneratePDFCmd(t *testing.T) {
 				"--service-config-path",
 				"../../tests/inputs/service.json",
 			},
+			exporterMockParamsType: "",
+			exporterMockTimes:      0,
 		},
 		{
 			testName:                           "Given with CustomerRepository with error",
@@ -302,6 +320,8 @@ func TestGeneratePDFCmd(t *testing.T) {
 				"--service-config-path",
 				"../../tests/inputs/service.json",
 			},
+			exporterMockParamsType: "",
+			exporterMockTimes:      0,
 		},
 		{
 			testName:                           "Given with ServiceRepository with error",
@@ -370,9 +390,89 @@ func TestGeneratePDFCmd(t *testing.T) {
 				"--service-config-path",
 				"../../tests/inputs/service.json",
 			},
+			exporterMockParamsType: "",
+			exporterMockTimes:      0,
 		},
 		{
-			testName:                           "Given generated PDF",
+			testName:                           "Given export without arg and return a error",
+			expectedOutput:                     "../../tests/outputs/error_exporter_path_generate_pdf_command.txt",
+			accountRepositoryMockRequestParams: "../../tests/inputs/account.json",
+			accountRepositoryMockTimes:         1,
+			accountRepositoryMockModel: model.Account{
+				Name:      "Pepito",
+				FirstName: "Ilan",
+				LastName:  "Zerath",
+				Mail:      "pepito@fuegobyp.io",
+				Address: model.Address{
+					Street:  "770 rue du Fuego",
+					ZipCode: "75006",
+					City:    "Paris",
+					Country: "France",
+				},
+				Company: model.Company{
+					Siret:   "11212",
+					Tva:     "21212",
+					Capital: 100.47,
+					RCS:     "Paris",
+					NAF:     "NAF",
+					Type:    "SARL",
+				},
+			},
+			accountRepositoryMockError:          nil,
+			customerRepositoryMockRequestParams: "../../tests/inputs/customer.json",
+			customerRepositoryMockTimes:         1,
+			customerRepositoryMockModel: model.Customer{
+				Name: "Tesla",
+				Address: model.Address{
+					Street:  "770 rue du Fuego",
+					ZipCode: "75006",
+					City:    "Paris",
+					Country: "France",
+				},
+				Company: model.Company{
+					Siret:   "11212",
+					Tva:     "21212",
+					Capital: 0,
+					RCS:     "",
+					NAF:     "",
+					Type:    "SARL",
+				},
+			},
+			customerRepositoryMockError:        nil,
+			serviceRepositoryMockRequestParams: "../../tests/inputs/service.json",
+			serviceRepositoryMockTimes:         1,
+			serviceRepositoryMockModel: model.Service{
+				Detail:    "Prestation Pepito Fuego by P",
+				Quantity:  10,
+				UnitPrice: 663,
+				TVA:       model.TVA{Pourcent: 20},
+			},
+			serviceRepositoryMockError:   nil,
+			formatFloatMockRequestParams: 20,
+			formatFloatMockTimes:         1,
+			formatFloatMockReturn:        "20",
+			formatIntMockRequestParams1:  6630,
+			formatIntMockRequestParams2:  6630,
+			formatIntMockRequestParams3:  1326,
+			formatIntMockRequestParams4:  7956,
+			formatIntMockTimes:           1,
+			formatIntMockReturn:          "38523",
+			args: []string{
+				"--account-config-path",
+				"../../tests/inputs/account.json",
+				"--customer-config-path",
+				"../../tests/inputs/customer.json",
+				"--service-config-path",
+				"../../tests/inputs/service.json",
+				"--export",
+				"",
+			},
+			exporterMockParamsType: "",
+			exporterMockTimes:      1,
+			exporterMockReturn:     errors.New("Esta no bueno my amigo !"),
+		},
+		{
+			testName:                           "Given export without arg and successfull",
 			expectedOutput:                     "",
 			accountRepositoryMockRequestParams: "../../tests/inputs/account.json",
 			accountRepositoryMockTimes:         1,
@@ -442,9 +542,88 @@ func TestGeneratePDFCmd(t *testing.T) {
 				"../../tests/inputs/customer.json",
 				"--service-config-path",
 				"../../tests/inputs/service.json",
-				"--pdf-path",
-				"../../tests/generated_pdf",
+				"--export",
+				"",
 			},
+			exporterMockParamsType: "",
+			exporterMockTimes:      1,
+		},
+		{
+			testName:                           "Given export with local arg and successfull",
+			expectedOutput:                     "",
+			accountRepositoryMockRequestParams: "../../tests/inputs/account.json",
+			accountRepositoryMockTimes:         1,
+			accountRepositoryMockModel: model.Account{
+				Name:      "Pepito",
+				FirstName: "Ilan",
+				LastName:  "Zerath",
+				Mail:      "pepito@fuegobyp.io",
+				Address: model.Address{
+					Street:  "770 rue du Fuego",
+					ZipCode: "75006",
+					City:    "Paris",
+					Country: "France",
+				},
+				Company: model.Company{
+					Siret:   "11212",
+					Tva:     "21212",
+					Capital: 100.47,
+					RCS:     "Paris",
+					NAF:     "NAF",
+					Type:    "SARL",
+				},
+			},
+			accountRepositoryMockError:          nil,
+			customerRepositoryMockRequestParams: "../../tests/inputs/customer.json",
+			customerRepositoryMockTimes:         1,
+			customerRepositoryMockModel: model.Customer{
+				Name: "Tesla",
+				Address: model.Address{
+					Street:  "770 rue du Fuego",
+					ZipCode: "75006",
+					City:    "Paris",
+					Country: "France",
+				},
+				Company: model.Company{
+					Siret:   "11212",
+					Tva:     "21212",
+					Capital: 0,
+					RCS:     "",
+					NAF:     "",
+					Type:    "SARL",
+				},
+			},
+			customerRepositoryMockError:        nil,
+			serviceRepositoryMockRequestParams: "../../tests/inputs/service.json",
+			serviceRepositoryMockTimes:         1,
+			serviceRepositoryMockModel: model.Service{
+				Detail:    "Prestation Pepito Fuego by P",
+				Quantity:  10,
+				UnitPrice: 663,
+				TVA:       model.TVA{Pourcent: 20},
+			},
+			serviceRepositoryMockError:   nil,
+			formatFloatMockRequestParams: 20,
+			formatFloatMockTimes:         1,
+			formatFloatMockReturn:        "20",
+			formatIntMockRequestParams1:  6630,
+			formatIntMockRequestParams2:  6630,
+			formatIntMockRequestParams3:  1326,
+			formatIntMockRequestParams4:  7956,
+			formatIntMockTimes:           1,
+			formatIntMockReturn:          "38523",
+			args: []string{
+				"--account-config-path",
+				"../../tests/inputs/account.json",
+				"--customer-config-path",
+				"../../tests/inputs/customer.json",
+				"--service-config-path",
+				"../../tests/inputs/service.json",
+				"--export",
+				"local",
+			},
+			exporterMockParamsType: "local",
+			exporterMockTimes:      1,
 		},
 	}
 
@@ -493,12 +672,19 @@ func TestGeneratePDFCmd(t *testing.T) {
 					Return(tc.formatIntMockReturn),
 			)
 
-			buf := new(bytes.Buffer)
+			exporterMock.EXPECT().
+				Save(gomock.Any(), tc.exporterMockParamsType, gomock.Any()).
+				Times(tc.exporterMockTimes).
+				Return(tc.exporterMockReturn)
 
-			sut := NewGeneratePDFCmd(buf, accountRepositoryMock, customerRepositoryMock, serviceRepositoryMock, formatFloatMock, formatIntMock)
+			bufCMD := new(bytes.Buffer)
 
-			sut.SetOut(buf)
-			sut.SetErr(buf)
+			bufOutput := new(bytes.Buffer)
+
+			sut := NewGeneratePDFCmd(bufOutput, accountRepositoryMock, customerRepositoryMock, serviceRepositoryMock, formatFloatMock, formatIntMock, exporterMock)
+
+			sut.SetOut(bufCMD)
+			sut.SetErr(bufCMD)
 
 			if len(tc.args) > 0 {
 				sut.SetArgs(tc.args)
@@ -506,7 +692,7 @@ func TestGeneratePDFCmd(t *testing.T) {
 
 			sut.ExecuteC()
 
-			result := buf.String()
+			result := bufCMD.String()
 
 			if tc.expectedOutput != "" {
 				expectedOutput, _ := ioutil.ReadFile(tc.expectedOutput)
@@ -514,18 +700,18 @@ func TestGeneratePDFCmd(t *testing.T) {
 				assert.Equal(t, []byte(result), expectedOutput)
 			}
 
-			if tc.expectedOutput == "" {
-				if _, err := os.Stat("../../tests/generated_pdf"); err != nil {
-					t.Fatal()
-				}
-			}
+			// if tc.expectedOutput == "" {
+			// 	if _, err := os.Stat("../../tests/generated_pdf"); err != nil {
+			// 		t.Fatal()
+			// 	}
+			// }
 		})
 	}
 
 }
 
 func deleteGeneratedPDF() {
-	if _, err := os.Stat("../../tests/generated_pdf"); err == nil {
-		os.RemoveAll("../../tests/generated_pdf")
+	if _, err := os.Stat("generated-pdf"); err == nil {
+		os.RemoveAll("generated-pdf")
 	}
 }

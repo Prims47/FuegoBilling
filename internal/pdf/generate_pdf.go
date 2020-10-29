@@ -2,6 +2,7 @@ package pdf
 
 import (
 	"fmt"
+	"io"
 
 	"github.com/jung-kurt/gofpdf"
 	"github.com/prims47/FuegoBilling/internal/model"
@@ -13,8 +14,6 @@ type BillingPDFInterface interface {
 }
 
 type BillingPDF struct {
-	PdfName       string
-	PdfPath       string
 	Account       model.Account
 	Customer      model.Customer
 	Service       model.Service
@@ -22,26 +21,28 @@ type BillingPDF struct {
 	FormatFloat   services.FormatFloatInterface
 	BillingNumber string
 	DateTo        string
+	Output        io.Writer
 }
 
-func NewBillingPDF(pdfPath string,
-	pdfName string,
+func NewBillingPDF(
 	account model.Account,
 	customer model.Customer,
 	service model.Service,
 	formatInt services.FormatIntInterface,
 	formatFloat services.FormatFloatInterface,
 	billingNumber string,
-	dateTo string) BillingPDFInterface {
-	return &BillingPDF{PdfName: pdfName,
-		PdfPath:       pdfPath,
+	dateTo string,
+	output io.Writer) BillingPDFInterface {
+	return &BillingPDF{
 		Account:       account,
 		Customer:      customer,
 		Service:       service,
 		FormatInt:     formatInt,
 		FormatFloat:   formatFloat,
 		BillingNumber: billingNumber,
-		DateTo:        dateTo}
+		DateTo:        dateTo,
+		Output:        output,
+	}
 }
 
 func handleHeader(pdf *gofpdf.Fpdf, b *BillingPDF) {
@@ -213,5 +214,5 @@ func (b *BillingPDF) CreatePDF() {
 	pdf.SetFont("Arial", "B", 15)
 	pdf.Cell(12, 8, tr(cleanTotalTTC(b)))
 
-	pdf.OutputFileAndClose(b.PdfPath + "/" + b.PdfName + ".pdf")
+	pdf.Output(b.Output)
 }
