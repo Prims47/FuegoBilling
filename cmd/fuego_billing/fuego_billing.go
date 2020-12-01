@@ -26,7 +26,15 @@ func main() {
 
 	exporterContext := exporter.NewExporterProviderContext(exporters)
 
-	cmd, err := newRootCmd(os.Stdout, accountRepository, customerRepository, serviceRepository, &services.FormatFloat{}, &services.FormatInt{}, exporterContext)
+	cmd, err := newRootCmd(
+		os.Stdout,
+		accountRepository,
+		customerRepository,
+		serviceRepository,
+		&services.FormatFloat{},
+		&services.FormatInt{},
+		exporterContext,
+	)
 
 	if err != nil {
 		fmt.Fprintln(os.Stderr, err)

@@ -9,6 +9,8 @@ require (
 	github.com/jung-kurt/gofpdf v1.16.2
 	github.com/pkg/errors v0.9.1
 	github.com/spf13/cobra v1.0.0
-	github.com/stretchr/testify v1.2.2
-	golang.org/x/text v0.3.0
+	github.com/stretchr/testify v1.4.0
+	golang.org/x/oauth2 v0.0.0-20200902213428-5d25da1a8d43
+	golang.org/x/text v0.3.3
+	google.golang.org/api v0.35.0
 )

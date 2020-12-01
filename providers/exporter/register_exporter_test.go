@@ -15,6 +15,7 @@ func TestRegisterExporter(t *testing.T) {
 	expectedExporters := []exporter.ExporterProviderInterface{
 		&LocalExporter{},
 		&AWSExporter{},
+		&GoogleDriveExporter{},
 	}
 
 	sut := NewRegisterExporter()

@@ -14,5 +14,6 @@ func (p *RegisterExporter) Register() []exporter.ExporterProviderInterface {
 	return []exporter.ExporterProviderInterface{
 		&LocalExporter{},
 		&AWSExporter{},
+		&GoogleDriveExporter{},
 	}
 }
