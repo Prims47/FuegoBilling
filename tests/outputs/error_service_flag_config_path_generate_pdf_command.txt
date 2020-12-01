@@ -8,7 +8,7 @@ Aliases:
 Flags:
   -a, --account-config-path string    JSON Account Config Path
   -c, --customer-config-path string   JSON Customer Config Path
+  -e, --export string                 Exporter provider (ex: local, AWS)
   -h, --help                          help for generate-pdf
-  -p, --pdf-path string               PDF Path
   -s, --service-config-path string    JSON Service Config Path
 

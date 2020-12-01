@@ -25,6 +25,7 @@ func TestRootCmd(t *testing.T) {
 	serviceRepositoryMock := generatedMock.NewMockServiceRepositoryInterface(mockCtrl)
 	formatFloatMock := generatedMock.NewMockFormatFloatInterface(mockCtrl)
 	formatIntMock := generatedMock.NewMockFormatIntInterface(mockCtrl)
+	exporterMock := generatedMock.NewMockExporterContextInterface(mockCtrl)
 
 	accountRepositoryMock.EXPECT().
 		Request(gomock.Eq("")).
@@ -50,6 +51,11 @@ func TestRootCmd(t *testing.T) {
 		IntToStringFrenchFormat(gomock.Eq("")).
 		Times(0).
 		Return("")
+
+	exporterMock.EXPECT().
+		Save(gomock.Eq(""), gomock.Eq(""), gomock.Eq([]byte(""))).
+		Times(0).
+		Return(nil)
 
 	testCases := []struct {
 		testName               string
@@ -88,7 +94,7 @@ func TestRootCmd(t *testing.T) {
 		t.Run(tc.testName, func(t *testing.T) {
 			buf := new(bytes.Buffer)
 
-			sut, err := newRootCmd(buf, tc.accountRepositoryMock, tc.customerRepositoryMock, tc.serviceRepositoryMock, tc.formatFloatMock, tc.formatIntMock)
+			sut, err := newRootCmd(buf, tc.accountRepositoryMock, tc.customerRepositoryMock, tc.serviceRepositoryMock, tc.formatFloatMock, tc.formatIntMock, exporterMock)
 
 			sut.SetOut(buf)
 			sut.SetErr(buf)

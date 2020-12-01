@@ -83,8 +83,28 @@ You must create your `json` configurations files like (all fields are required):
 }
 ```
 
+### Export your PDF
+
+> You have AWS (flag: aws) / Local (by default) / Google Drive (flag: drive)
+
+#### AWS
+
+> ! You must provide following env variable before the command:
+
+```
+AWS_SECRET_ACCESS_KEY="YOUR-ACCESS-KEY" AWS_ACCESS_KEY_ID="YOUR-KEY-ID" AWS_REGION="eu-west-3"
+```
+
+#### Google Drive
+
+> ! Before launch the command you must follow this link (https://console.developers.google.com/apis)[https://console.developers.google.com/apis], go to identifier section and create a ID Client OAuth for desktop app
+
+![google drive create api](docs/images/google_create_api.png "Google Drive create api")
+
+> ! When you launch the command, google ask to copy/paste a url in your browser. After accept all requirement you be able to use your drive.
+
 ### Create your billing
 
 ```shell
-$ fuegoBilling generate-pdf --account-config-path your-personal-account.json --customer-config-path your-customer.json --service-config-path your-service.json --pdf-path your-pdf-path
+$ fuegoBilling generate-pdf --account-config-path your-personal-account.json --customer-config-path your-customer.json --service-config-path your-service.json --pdf-path your-pdf-path --export aws
 ```

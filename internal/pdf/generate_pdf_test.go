@@ -1,6 +1,8 @@
 package pdf
 
 import (
+	"bytes"
+	"io/ioutil"
 	"os"
 	"testing"
 	"time"
@@ -9,9 +11,8 @@ import (
 	"github.com/jung-kurt/gofpdf"
 	"github.com/prims47/FuegoBilling/internal/model"
 	generatedMock "github.com/prims47/FuegoBilling/internal/pdf/mock"
+	"github.com/stretchr/testify/assert"
 )
-
-const generatedPDFPath = "../../tests/generated_pdf"
 
 func TestGeneratePDF(t *testing.T) {
 	t.Parallel()
@@ -42,7 +43,6 @@ func TestGeneratePDF(t *testing.T) {
 	}{
 		{
 			testName:       "Given generated PDF",
-			pdfName:        "test_generated_billing",
 			expectedOutput: "../../tests/pdf/test_generated_billing.pdf",
 			accountRepositoryMockModel: model.Account{
 				Name:      "Pepito",
@@ -101,7 +101,6 @@ func TestGeneratePDF(t *testing.T) {
 
 	for _, tc := range testCases {
 		t.Run(tc.testName, func(t *testing.T) {
-			defer deleteGeneratedPDF()
 
 			formatFloatMock.EXPECT().
 				Float32ToString(tc.formatFloatMockRequestParams).
@@ -127,9 +126,9 @@ func TestGeneratePDF(t *testing.T) {
 					Return(tc.formatIntMockReturn),
 			)
 
+			buf := new(bytes.Buffer)
+
 			sut := NewBillingPDF(
-				generatedPDFPath,
-				tc.pdfName,
 				tc.accountRepositoryMockModel,
 				tc.customerRepositoryMockModel,
 				tc.serviceRepositoryMockModel,
@@ -137,9 +136,8 @@ func TestGeneratePDF(t *testing.T) {
 				formatFloatMock,
 				"FR-1234",
 				"22 Oct 2020",
+				buf,
 			)
-
-			os.Mkdir(generatedPDFPath, os.ModePerm)
 
 			datePDF := time.Date(2000, 1, 1, 0, 0, 0, 0, time.UTC)
 			gofpdf.SetDefaultCreationDate(datePDF)
@@ -149,25 +147,16 @@ func TestGeneratePDF(t *testing.T) {
 
 			if tc.expectedOutput != "" {
 				os.Chtimes(tc.expectedOutput, datePDF, datePDF)
-				err := gofpdf.ComparePDFFiles(tc.expectedOutput, generatedPDFPath+"/test_generated_billing.pdf", true)
+
+				data, err := ioutil.ReadFile(tc.expectedOutput)
 
 				if err != nil {
-					t.Fatal("Error when compare expected PDF")
-				}
-			}
-
-			if tc.expectedOutput == "" {
-				if _, err := os.Stat(generatedPDFPath); err != nil {
 					t.Fatal()
 				}
+
+				assert.Equal(t, data, buf.Bytes())
 			}
 		})
 	}
 
-}
-
-func deleteGeneratedPDF() {
-	if _, err := os.Stat(generatedPDFPath); err == nil {
-		os.RemoveAll(generatedPDFPath)
-	}
 }
