@@ -103,6 +103,12 @@ AWS_SECRET_ACCESS_KEY="YOUR-ACCESS-KEY" AWS_ACCESS_KEY_ID="YOUR-KEY-ID" AWS_REGI
 
 > ! When you launch the command, google ask to copy/paste a url in your browser. After accept all requirement you be able to use your drive.
 
+> ! You must provide following env variable before the command:
+
+```
+DRIVE_CLIENT_ID="YOUR-CLIENT-ID" DRIVE_CLIENT_SECRET="YOUR-CLIENT-SECRET" DRIVE_REDIRECT_URL="YOUR-REDIRECT-URL" DRIVE_AUTH_URL="YOUR-AUTH-URL" DRIVE_TOKEN_URL="YOUR-TOKEN-URL"
+```
+
 ### Create your billing
 
 ```shell
